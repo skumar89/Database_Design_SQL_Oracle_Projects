@@ -1,0 +1,439 @@
+DBS301 Assignment#1    
+Due: BEFORE Monday of week 7
+
+SUBMISSION:
+1 Change the file to read a1-your email id --- of one of the members
+2 Email the result to me and CC all member in the group
+3 Not doing the above will result in a 25% deduction
+
+This assignment can be done in groups. Ideal might be 2 to 4, but is not limited to that number.
+It is suggested that you ALL do it individually and then meat to compare.
+VERY IMPORTANT:
+Being part of a group is the same as being a part of a team for these assignments. When you submitted your work as part of a group you are saying that you understood what was submitted and that you fully participated with ALL the group members. It does not mean letting others do your work for you. It doesd not mean watching the others do the work. For your full participation you get a mark equal to all the others in the group. If on the test, which is very much like the assignment, you cannot answer it well then you didn’t participate and understand the assignment but depended on others for the mark you received. That is very much like submitting their work and claiming it is your work. 
+
+Members in group
+Name	Student ID	Email address	Oracle ID
+Sarthak Kumar	022 265 144	skumar89@myseneca.ca
+dbs301_163e02
+Kevin Chintaman	024 434 124	kchintam19@mysene.ca
+Dbs301_169e10
+Laura Smith	027 165 259	Lsmith10@myseneca.ca
+Dbs301_171b15
+			
+			
+			
+			
+
+
+
+
+Submit the SQL and the results of the SQL after each question 
+1 Display the (a) employee number, (b) full employee name, (c) job and (d) hire date.
+- Limit the display to all employees hired in May or November of any year. 
+- The most recently hired employees are displayed first. 
+- Exclude people hired in 1994 and 1995. 
+- Full name should be in the form   Lastname, Firstname  -- with an alias called Full Name.
+- Hire date should point to the last day in May or November of that year (NOT to the exact day) 
+- The format is in the form of May 31st of 1996 – note there is no big gap between month and 31st
+- The hire date column should be called Start Date. 
+NOTE: Do NOT use a LIKE operator. 
+You should display ONE row per output line by limiting the width of the Full Name to 25 characters. 
+The output lines should look like this line:
+		
+EMPLOYEE_ID 	Full Name 	JOB_ID 	Start Date 
+174 	Abel, Ellen 	SA_REP 	May 31st of 1996
+
+SELECT
+  		EMPLOYEE_ID,
+  		SUBSTR(LAST_NAME ||', ' || FIRST_NAME,1,25) AS "Full Name",
+  		JOB_ID,
+  		TO_CHAR(LAST_DAY(HIRE_DATE),'fmMonth ddth "of" YYYY') AS "Start Date"                                    
+FROM 	EMPLOYEES  
+WHERE 	TO_CHAR(HIRE_DATE,'fmMonth') IN ('May','November')
+AND   		TO_NUMBER(TO_CHAR(HIRE_DATE,'YYYY')) NOT IN (1994, 1995)
+ORDER BY 	HIRE_DATE DESC;
+
+EMPLOYEE_ID 	Full Name		JOB_ID    	Start Date           
+----------- 		------------------------- 	---------- ----------------------
+        124 		Mourgos, Kevin      	ST_MAN     	November 30th of 1999 
+        178 		Grant, Kimberely    	SA_REP     	May 31st of 1999      
+        174 		Abel, Ellen             	SA_REP     	May 31st of 1996      
+        104 		Ernst, Bruce           	IT_PROG    	May 31st of 1991                                                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.List the employee number, full name, job and the modified salary for all employees
+- whose monthly earning (without the increase) is outside the range $6,000 – $11,000
+- and who are employed as a Vice Presidents or Managers (President is not counted here).
+	- You should use Wild Card characters for this. 
+- the modified salary for a VP will be 30% higher 
+- and managers a 20% salary increase.
+- Sort the output by the top salaries (before this increase).
+Heading will be: 	Employees with increased Pay
+The output lines should look like this sample line:
+
+Emp# 124 named Kevin Mourgos who is ST_MAN will have a new salary of $6960
+
+SELECT 
+        		'Emp# ' || EMPLOYEE_ID ||
+        		' named ' || FIRST_NAME||' '|| LAST_NAME ||
+        		' who is ' || JOB_ID ||
+        		' will have a new salary of ' || '$' || 
+        		CASE JOB_ID 
+WHEN ‘AD_VP' THEN SALARY * 1.3
+                    	ELSE 
+SALARY * 1.2 
+END
+        		AS "Employees with increased Pay"
+FROM    	EMPLOYEES
+WHERE   	SALARY NOT BETWEEN 6000 AND 11000
+AND     	(JOB_ID LIKE '%VP'
+OR      	JOB_ID LIKE '%MGR'
+OR      	JOB_ID LIKE '%MAN')
+ORDER BY 	SALARY DESC;
+
+Employees with increased Pay                                                   
+--------------------------------------------------------------------------------
+Emp# 101 named Neena Kochhar who is AD_VP will have a new salary of $22100                                                                                                              
+Emp# 102 named Lex De Haan who is AD_VP will have a new salary of $22100                                                                                                                
+Emp# 201 named Michael Hartstein who is MK_MAN will have a new salary of $15600                                                                                                         
+Emp# 205 named Shelley Higgins who is AC_MGR will have a new salary of $14400                                                                                                           
+Emp# 124 named Kevin Mourgos who is ST_MAN will have a new salary of $6960  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3.Display the employee last name, salary, job title and manager# of all 
+- employees not earning a commission OR if they work in SALES department
+- but only if their total monthly salary with a $1000 included bonus and commission (if earned) is greater than $15,000.  
+- Let’s assume that all employees receive this bonus.
+- If an employee does not have a manager, then display the word NONE instead.
+		- This column should have an alias Manager#.
+Display the Total annual salary in the form of $135,600.00 
+		- with the heading   Total Income. 
+- Sort the result so that the best paid employees are shown first.  
+The output lines should look like this sample line:
+
+De Haan 	17000 	AD_VP 	100 	$216,000.00 
+
+
+SELECT 
+  		LAST_NAME,
+  		SALARY,
+  		JOB_ID,
+  		NVL(TO_CHAR(MANAGER_ID),'NONE') AS "Manager#",
+  		TO_CHAR(((SALARY+1000) * 12),'$999,999.99') AS "Total Income"
+FROM 	EMPLOYEES
+WHERE 	(NVL(COMMISSION_PCT,0) = 0
+OR 		DEPARTMENT_ID = 80)
+AND 		(SALARY + 1000 + (SALARY * NVL(COMMISSION_PCT,0))) > 15000
+ORDER BY 	5 DESC;
+
+
+
+LAST_NAME         SALARY JOB_ID        Manager#                      Total Income
+------------------------- ---------- ---------- ---------------------------------------- ------------
+King                        24000 	  AD_PRES    NONE                             $300,000.00
+Kochhar                 17000     AD_VP        100                                  $216,000.00
+De Haan                17000     AD_VP        100                                  $216,000.00
+Abel                       11000     SA_REP      149                                  $144,000.00
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4.Display Department_id, Job_id and the Lowest salary for this combination but only if that Lowest Pay falls in the range $6000 - $18000. 
+Exclude people who 
+	(a) work as some kind of Representative job from this query and 
+	(b) departments IT and SALES 
+Sort the output according to the Department_id and then by Job_id.
+          You MUST NOT use the Subquery method.
+
+SELECT
+  		DEPARTMENT_ID,
+  		JOB_ID,
+  		MIN(SALARY) AS "Lowest"
+FROM 	EMPLOYEES
+GROUP BY 	DEPARTMENT_ID, JOB_ID
+HAVING 	MIN(SALARY) BETWEEN 6000 AND 18000
+AND 		JOB_ID NOT LIKE '%REP'
+AND 		DEPARTMENT_ID NOT IN (60,80)
+ORDER BY 	DEPARTMENT_ID, JOB_ID
+
+
+DEPARTMENT_ID 	     JOB_ID         	Lowest
+------------- 		     ---------- 		----------
+           20 		     MK_MAN          	13000
+           90 		     AD_VP           	17000
+          110 		     AC_ACCOUNT     8300
+          110 		     AC_MGR          	12000 
+5.Display last_name, salary and job for all employees who earn more than all lowest paid employees per department outside the US locations.
+Exclude President and Vice Presidents from this query.
+Sort the output by job title ascending.
+          You need to use a Subquery and Joining with the NEWER method. (USING/JOIN)
+
+SELECT
+        		LAST_NAME,
+        		SALARY,
+        		JOB_ID
+FROM    	EMPLOYEES 
+WHERE   	SALARY > ALL (SELECT
+                          			MIN(SALARY)
+                      		FROM EMPLOYEES JOIN DEPARTMENTS USING (DEPARTMENT_ID)
+                      		JOIN LOCATIONS USING (LOCATION_ID)
+                      		WHERE COUNTRY_ID <> 'US'
+                      		GROUP BY DEPARTMENT_ID)
+AND     	JOB_ID NOT IN ('AD_PRES','AD_VP')
+ORDER BY 	JOB_ID;
+
+LAST_NAME               SALARY 	JOB_ID   
+------------------------- ---------- ----------
+Higgins                        12000 	AC_MGR    
+Hunold                          9000 	IT_PROG   
+Hartstein                      13000 	MK_MAN    
+Zlotkey                        10500 	SA_MAN    
+Abel                           11000 	SA_REP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.Who are the employees (show last_name, salary and job) who work either in IT or MARKETING department and earn more than the worst paid person in the ACCOUNTING department. 
+Sort the output by the last name alphabetically.
+You need to use ONLY the Subquery method (NO joins allowed).
+
+SELECT
+    		LAST_NAME,
+    		SALARY,
+    		JOB_ID
+FROM 	EMPLOYEES
+WHERE 	DEPARTMENT_ID IN (SELECT
+                          					DEPARTMENT_ID
+                       			      FROM 	DEPARTMENTS
+                       			      WHERE 	DEPARTMENT_NAME IN('IT','Marketing'))
+AND SALARY > (SELECT
+                  			MIN(SALARY)
+                	       FROM EMPLOYEES 
+                	       WHERE DEPARTMENT_ID = (SELECT
+                                          					DEPARTMENT_ID
+                                      				    FROM DEPARTMENTS
+                                      				    WHERE DEPARTMENT_NAME = 'Accounting'))
+ORDER BY LAST_NAME;        
+
+LAST_NAME              SALARY 	JOB_ID   
+------------------------- ---------- ----------
+Hartstein                      13000 	MK_MAN    
+Hunold                          9000 	IT_PROG   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7.Display alphabetically the last name, job, salary, department number for each employee who earns less than the best paid unionized employee 
+- unionized employees are not a manager, presidents or vice president
+	And do not work in SALES or MARKETING departments
+-Full name should be displayed as Firstname  Lastname and should have the heading Employee. 
+Salary should be left-padded with the = symbol till the width of 12 characters. It should have an alias Salary.
+- salary is formatted as a currency amount incl. thousand separator, but no decimals and no $ sign
+- display in order of employee number
+The output lines should look like this sample line:
+
+Taylor 	SA_REP 	===== 8,600 	80 
+
+
+SELECT
+      		INITCAP(FIRST_NAME ||' '|| LAST_NAME) AS "Employee",
+      		JOB_ID,
+      		LPAD(TO_CHAR(SALARY,'9,999'),12,'=') AS "Salary",
+      		DEPARTMENT_ID
+FROM 	EMPLOYEES
+WHERE 	SALARY < (SELECT
+                    				MAX(SALARY)
+                			FROM EMPLOYEES
+                	WHERE JOB_ID NOT IN('ST_MAN','SA_MAN','AC_MGR','MK_MAN','AD_VP','AD_PRES')  
+                			AND DEPARTMENT_ID NOT IN(80,20))
+ORDER BY EMPLOYEE_ID;
+
+
+Employee                         JOB_ID     Salary       DEPARTMENT_ID
+---------------------------------------------- ---------- ------------ -------------
+Bruce Ernst                     IT_PROG    ====== 6,000            60
+Diana Lorentz                 IT_PROG    ====== 4,200            60
+Kevin Mourgos               ST_MAN     ====== 5,800            50
+Trenna Rajs                   ST_CLERK   ====== 3,500            50
+Curtis Davies                 ST_CLERK   ====== 3,100            50
+Randall Matos               ST_CLERK   ====== 2,500            50
+Peter Vargas                 ST_CLERK   ====== 2,500            50
+Jonathon Taylor            SA_REP     ====== 8,600            80
+Kimberely Grant            SA_REP     ====== 7,000              
+Jennifer Whalen            AD_ASST    ====== 2,500            10
+Pat Fay                          MK_REP     ====== 6,000            20
+William Gietz                AC_ACCOUNT ====== 8,300       110
+
+
+
+
+
+
+
+
+
+
+
+8. DIFFICULT problem
+Display department name, city and number of different jobs in each department. 
+- If city is null, you should print No Assigned City.
+	- This column should have alias City.
+Column that shows # of different jobs in a department should have the heading # of Jobs
+Limit the width of the City to 25 characters.
+
+NOTE: You need to show complete situation from the EMPLOYEE point of view,    
+meaning include also employees who work for NO department (but do NOT display empty departments) and from the CITY point of view meaning you need to display all cities without departments as well.
+You need to use Outer Joining with the NEWER (Oracle) method (not the + symbol method)
+	
+SELECT
+    		SUBSTR(NVL(CITY,'No Assigned City'),1,25) AS "City",
+    		NVL(DEPARTMENT_NAME, 'No Department') AS "Deparmtent Name",
+   	 	COUNT(DISTINCT(JOB_ID)) AS "# of Jobs"
+FROM 	LOCATIONS LEFT JOIN DEPARTMENTS USING(LOCATION_ID)
+FULL JOIN 	EMPLOYEES USING(DEPARTMENT_ID)
+GROUP BY 	CITY, DEPARTMENT_NAME
+ORDER BY 	3 desc,2;
+
+City                           	Deparmtent Name                 # of Jobs
+------------------------------ ------------------------------ ----------
+Seattle                        	Executive                                  3
+Seattle                        	Accounting                                2
+Toronto                        	Marketing                                  2
+Oxford                         	Sales                                         2
+South San Francisco          Shipping                                    2
+Seattle                        	Administration                            1
+Southlake                      	IT                                                1
+No Assigned City               No Department                           1
+Seattle                        	Contracting                                 0
+Geneva                         	No Department                           0
+Stretford                      	No Department                           0
+Beijing                        	No Department                           0
+South Brunswick                No Department                           0
+Bombay                         	No Department                           0
+Mexico City                    	No Department                           0
+Sao Paulo                      	No Department                           0
+Whitehorse                     	No Department                           0
+Tokyo                          	No Department                           0
+Munich                         	No Department                           0
+Roma                           	No Department                           0
+London                         	No Department                           0
+Utrecht                        	No Department                           0
+Bern                           	No Department                           0
+Sydney                         	No Department                           0
+Hiroshima                      	No Department                           0
+Venice                         	No Department                           0
+Singapore                      	No Department                           0	
+	
+
+9. . Write a query that displays the employee’s Full Name and Job Title in the following format:
+DAVIES, CURTIES is Store Clerk
+- only employees whose last name ends with S and first name starts with C or K.
+- Sort the result by the employees’ last names.
+
+
+SELECT
+    		UPPER(LAST_NAME||', '|| FIRST_NAME) AS "Full Name",
+    		CASE JOB_ID WHEN 'ST_CLERK' THEN 'Store Clerk'
+                			   WHEN 'ST_MAN' THEN 'Store Manager'
+    		END AS "Job Title"
+FROM 	EMPLOYEES
+WHERE 	UPPER(SUBSTR(LAST_NAME,-1,1)) = 'S'
+AND 		UPPER(SUBSTR(FIRST_NAME,1,1)) IN ('C','K');
+
+
+
+
+Full Name                                       Job Title   
+----------------------------------------------- -------------
+DAVIES, CURTIS                                  Store Clerk  
+MOURGOS, KEVIN                                  Store Manager
