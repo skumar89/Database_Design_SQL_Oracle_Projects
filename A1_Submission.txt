@@ -15,18 +15,13 @@ Members in group
 Name	Student ID	Email address	Oracle ID
 Sarthak Kumar	022 265 144	skumar89@myseneca.ca
 dbs301_163e02
-Kevin Chintaman	024 434 124	kchintam19@mysene.ca
+Kevin Chintaman	024 434 124	kchintam19@myseneca.ca
 Dbs301_169e10
 Laura Smith	027 165 259	Lsmith10@myseneca.ca
 Dbs301_171b15
 			
 			
 			
-			
-
-
-
-
 Submit the SQL and the results of the SQL after each question 
 1 Display the (a) employee number, (b) full employee name, (c) job and (d) hire date.
 - Limit the display to all employees hired in May or November of any year. 
@@ -59,24 +54,6 @@ EMPLOYEE_ID 	Full Name		JOB_ID    	Start Date
         178 		Grant, Kimberely    	SA_REP     	May 31st of 1999      
         174 		Abel, Ellen             	SA_REP     	May 31st of 1996      
         104 		Ernst, Bruce           	IT_PROG    	May 31st of 1991                                                       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -122,17 +99,6 @@ Emp# 124 named Kevin Mourgos who is ST_MAN will have a new salary of $6960
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 3.Display the employee last name, salary, job title and manager# of all 
 - employees not earning a commission OR if they work in SALES department
 - but only if their total monthly salary with a $1000 included bonus and commission (if earned) is greater than $15,000.  
@@ -169,21 +135,6 @@ De Haan                17000     AD_VP        100                               
 Abel                       11000     SA_REP      149                                  $144,000.00
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 4.Display Department_id, Job_id and the Lowest salary for this combination but only if that Lowest Pay falls in the range $6000 - $18000. 
 Exclude people who 
 	(a) work as some kind of Representative job from this query and 
@@ -209,6 +160,7 @@ DEPARTMENT_ID 	     JOB_ID         	Lowest
            90 		     AD_VP           	17000
           110 		     AC_ACCOUNT     8300
           110 		     AC_MGR          	12000 
+
 5.Display last_name, salary and job for all employees who earn more than all lowest paid employees per department outside the US locations.
 Exclude President and Vice Presidents from this query.
 Sort the output by job title ascending.
@@ -237,30 +189,6 @@ Zlotkey                        10500 	SA_MAN
 Abel                           11000 	SA_REP
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 6.Who are the employees (show last_name, salary and job) who work either in IT or MARKETING department and earn more than the worst paid person in the ACCOUNTING department. 
 Sort the output by the last name alphabetically.
 You need to use ONLY the Subquery method (NO joins allowed).
@@ -287,31 +215,6 @@ LAST_NAME              SALARY 	JOB_ID
 ------------------------- ---------- ----------
 Hartstein                      13000 	MK_MAN    
 Hunold                          9000 	IT_PROG   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 7.Display alphabetically the last name, job, salary, department number for each employee who earns less than the best paid unionized employee 
 - unionized employees are not a manager, presidents or vice president
@@ -353,15 +256,6 @@ Kimberely Grant            SA_REP     ====== 7,000
 Jennifer Whalen            AD_ASST    ====== 2,500            10
 Pat Fay                          MK_REP     ====== 6,000            20
 William Gietz                AC_ACCOUNT ====== 8,300       110
-
-
-
-
-
-
-
-
-
 
 
 8. DIFFICULT problem
